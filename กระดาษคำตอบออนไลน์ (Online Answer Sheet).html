@@ -1,0 +1,2387 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>กระดาษคำตอบออนไลน์</title>
+
+  <!-- Google Fonts: Noto Sans Thai & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans Thai"', 'Inter', 'sans-serif'],
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(6px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            popIn: {
+              '0%': { opacity: '0', transform: 'scale(0.96)' },
+              '100%': { opacity: '1', transform: 'scale(1)' },
+            },
+          },
+          animation: {
+            fadeIn: 'fadeIn 0.22s ease-out forwards',
+            popIn: 'popIn 0.18s ease-out forwards',
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased min-h-screen transition-colors duration-200 overflow-x-hidden">
+
+  <!-- Subtle Ambient Background Glow (Dark Mode) -->
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none hidden dark:block">
+    <div id="glow-1" class="absolute -top-32 -left-24 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl transition-colors duration-500"></div>
+    <div id="glow-2" class="absolute bottom-0 -right-24 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl transition-colors duration-500"></div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70] pointer-events-none flex flex-col items-center gap-2 w-[90%] max-w-sm"></div>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 1: HOME / HUB (สร้างกระดาษคำตอบ + คลังวิชาและบทเรียน)            -->
+  <!-- ===================================================================== -->
+  <div id="view-home" class="hidden min-h-screen pb-16">
+    <!-- Clean Top Header -->
+    <header class="sticky top-0 z-30 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/10">
+      <div class="max-w-3xl mx-auto px-4 py-3.5 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <div id="brand-icon" class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <h1 class="text-lg sm:text-xl font-extrabold tracking-tight truncate">กระดาษคำตอบ</h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400 truncate">บันทึกอัตโนมัติในแคช • ซ่อมข้อที่ผิดได้ตลอด</p>
+          </div>
+        </div>
+
+        <button
+          id="btn-open-customize-home"
+          type="button"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-bold transition active:scale-95 shrink-0"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          </svg>
+          <span>ปรับแต่ง</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-4 pt-6 space-y-8 animate-fadeIn">
+      <!-- Create New Answer Sheet Card -->
+      <section class="bg-white dark:bg-slate-900/75 backdrop-blur-xl border border-slate-200/90 dark:border-white/10 rounded-3xl p-5 sm:p-7 shadow-xl shadow-slate-200/40 dark:shadow-black/40">
+        <div class="flex items-center justify-between gap-2 mb-5">
+          <div>
+            <h2 class="text-lg sm:text-xl font-extrabold">สร้างกระดาษคำตอบใหม่</h2>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">จัดหมวดตามวิชาและบท เพื่อเก็บสถิติและย้อนซ่อมข้อที่ผิดได้</p>
+          </div>
+        </div>
+
+        <form id="create-form" class="space-y-5">
+          <!-- Subject & Chapter Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Subject Input -->
+            <div>
+              <label for="input-subject" class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                หมวด / วิชา
+              </label>
+              <input
+                id="input-subject"
+                type="text"
+                placeholder="เช่น คอมพิวเตอร์, คณิตศาสตร์"
+                required
+                class="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              />
+              <!-- Existing Subject Quick Chips -->
+              <div id="subject-quick-chips" class="flex flex-wrap gap-1.5 mt-2"></div>
+            </div>
+
+            <!-- Chapter / Subtopic Input -->
+            <div>
+              <label for="input-chapter" class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                หัวข้อย่อย / บท
+              </label>
+              <input
+                id="input-chapter"
+                type="text"
+                placeholder="เช่น บทที่ 1, แนวข้อสอบชุดที่ 1"
+                required
+                class="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              />
+            </div>
+          </div>
+
+          <!-- Number of Questions -->
+          <div>
+            <label for="input-count" class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+              จำนวนข้อเริ่มต้น
+            </label>
+            <div class="flex flex-col sm:flex-row gap-2.5">
+              <div class="relative sm:w-40 shrink-0">
+                <input
+                  id="input-count"
+                  type="number"
+                  min="1"
+                  max="500"
+                  value="20"
+                  required
+                  class="w-full px-4 py-3 pr-12 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-lg font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                />
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-semibold">ข้อ</span>
+              </div>
+
+              <div class="grid grid-cols-5 gap-1.5 flex-1">
+                <button type="button" data-preset="10" class="preset-btn py-2.5 rounded-xl text-sm font-bold border transition active:scale-95">10</button>
+                <button type="button" data-preset="20" class="preset-btn py-2.5 rounded-xl text-sm font-bold border transition active:scale-95">20</button>
+                <button type="button" data-preset="30" class="preset-btn py-2.5 rounded-xl text-sm font-bold border transition active:scale-95">30</button>
+                <button type="button" data-preset="50" class="preset-btn py-2.5 rounded-xl text-sm font-bold border transition active:scale-95">50</button>
+                <button type="button" data-preset="100" class="preset-btn py-2.5 rounded-xl text-sm font-bold border transition active:scale-95">100</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Choice Style Selector -->
+          <div>
+            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+              รูปแบบตัวเลือก
+            </label>
+            <div id="choice-style-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+
+            <!-- Custom Choices Input (shown when 'custom' is selected) -->
+            <div id="custom-choices-wrap" class="hidden mt-2.5">
+              <input
+                id="input-custom-choices"
+                type="text"
+                placeholder="พิมพ์ตัวเลือกคั่นด้วยเว้นวรรค เช่น ถูก ผิด หรือ ก ข ค ง จ ฉ"
+                class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              />
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            id="btn-start-sheet"
+            type="submit"
+            class="w-full py-4 px-6 rounded-2xl text-white font-extrabold text-base sm:text-lg shadow-lg transition active:scale-[0.98] flex items-center justify-center gap-2"
+          >
+            <span>เริ่มทำกระดาษคำตอบ</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </button>
+        </form>
+      </section>
+
+      <!-- Saved Subjects Library -->
+      <section class="space-y-3.5">
+        <div class="flex items-center justify-between px-1">
+          <div>
+            <h2 class="text-lg font-extrabold">คลังวิชาและข้อที่ผิด</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">กดเข้าไปในวิชาเพื่อดูบทเรียนและซ่อมข้อที่ทำผิด</p>
+          </div>
+          <span id="home-subject-count" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300">0 วิชา</span>
+        </div>
+
+        <div id="subjects-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
+
+        <!-- Empty Subjects State -->
+        <div id="subjects-empty" class="hidden text-center py-12 px-6 rounded-3xl bg-white/60 dark:bg-slate-900/40 border border-dashed border-slate-300 dark:border-white/10">
+          <div class="w-12 h-12 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-800/80 text-slate-400 flex items-center justify-center mb-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <p class="font-bold text-slate-700 dark:text-slate-300">ยังไม่มีวิชาที่บันทึกไว้</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">สร้างกระดาษคำตอบด้านบน ระบบจะสร้างหมวดวิชาและบันทึกให้อัตโนมัติ</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 2: SUBJECT DETAIL (หน้ารายละเอียดวิชา -> ดูบท + ซ่อมผิดทั้งวิชา)  -->
+  <!-- ===================================================================== -->
+  <div id="view-subject" class="hidden min-h-screen pb-16">
+    <header class="sticky top-0 z-30 bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/10">
+      <div class="max-w-3xl mx-auto px-4 py-3.5 flex items-center justify-between gap-3">
+        <button
+          id="btn-subject-back"
+          type="button"
+          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 text-sm font-bold transition active:scale-95"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span>หน้าหลัก</span>
+        </button>
+
+        <h2 id="subject-header-name" class="text-base sm:text-lg font-extrabold truncate flex-1 text-center">วิชา</h2>
+
+        <button
+          id="btn-subject-delete"
+          type="button"
+          title="ลบวิชานี้"
+          class="p-2 rounded-xl bg-slate-100 hover:bg-rose-100 dark:bg-slate-900 dark:hover:bg-rose-500/20 text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-300 border border-slate-200 dark:border-white/10 transition active:scale-95"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-4 pt-6 space-y-6 animate-fadeIn">
+      <!-- Subject Summary & Whole-Subject Mistake Retake Card -->
+      <section class="bg-white dark:bg-slate-900/75 backdrop-blur-xl border border-slate-200/90 dark:border-white/10 rounded-3xl p-5 sm:p-6 shadow-xl shadow-slate-200/40 dark:shadow-black/30">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">ภาพรวมทั้งวิชา</span>
+            <h1 id="subject-hero-name" class="text-2xl sm:text-3xl font-extrabold mt-0.5">คอมพิวเตอร์</h1>
+            <p id="subject-hero-stats" class="text-sm text-slate-500 dark:text-slate-400 mt-1">0 บท • ทั้งหมด 0 ข้อ</p>
+          </div>
+
+          <button
+            id="btn-add-chapter-in-subject"
+            type="button"
+            class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white text-sm font-bold transition active:scale-95 shrink-0"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>เพิ่มบทใหม่</span>
+          </button>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="grid grid-cols-3 gap-2.5 sm:gap-3 mt-5">
+          <div class="rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-3 text-center">
+            <div class="text-xs font-bold text-emerald-600 dark:text-emerald-300">ถูกทั้งหมด</div>
+            <div id="sub-stat-correct" class="text-xl sm:text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">0</div>
+          </div>
+          <div class="rounded-2xl bg-rose-500/10 border border-rose-500/20 p-3 text-center">
+            <div class="text-xs font-bold text-rose-600 dark:text-rose-300">ยังผิดอยู่</div>
+            <div id="sub-stat-wrong" class="text-xl sm:text-2xl font-extrabold text-rose-600 dark:text-rose-400 mt-0.5">0</div>
+          </div>
+          <div class="rounded-2xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-white/10 p-3 text-center">
+            <div class="text-xs font-bold text-slate-500 dark:text-slate-400">รอตรวจ</div>
+            <div id="sub-stat-pending" class="text-xl sm:text-2xl font-extrabold text-slate-700 dark:text-slate-200 mt-0.5">0</div>
+          </div>
+        </div>
+
+        <!-- Whole-Subject Wrong Questions Breakdown & Retake CTA -->
+        <div id="subject-wrong-box" class="hidden mt-5 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-500/30 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-sm font-extrabold text-rose-700 dark:text-rose-300">รายการข้อที่ยังทำผิดในวิชานี้</span>
+            <span id="subject-wrong-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-rose-500 text-white">0 ข้อ</span>
+          </div>
+          <div id="subject-wrong-breakdown" class="space-y-1.5 text-xs sm:text-sm text-rose-800 dark:text-rose-200/90"></div>
+          <button
+            id="btn-retake-subject"
+            type="button"
+            class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-rose-500/25 transition active:scale-[0.98] flex items-center justify-center gap-2"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span id="btn-retake-subject-label">ซ่อมข้อที่ผิดทั้งวิชา</span>
+          </button>
+        </div>
+
+        <!-- All Clear Celebration Banner -->
+        <div id="subject-all-clear" class="hidden mt-5 p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-500/30 flex items-center gap-3">
+          <span class="text-2xl">🎉</span>
+          <div>
+            <p class="text-sm font-extrabold text-emerald-700 dark:text-emerald-300">ยอดเยี่ยม! ไม่มีข้อที่ทำผิดค้างอยู่ในวิชานี้แล้ว</p>
+            <p class="text-xs text-emerald-600/80 dark:text-emerald-400/80">คุณเก็บข้อผิดครบทุกบทในวิชานี้เรียบร้อย</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Chapters List -->
+      <section class="space-y-3">
+        <div class="flex items-center justify-between px-1">
+          <h3 class="text-base font-extrabold">หัวข้อย่อย / บทเรียน</h3>
+          <span id="subject-chapter-count" class="text-xs font-bold text-slate-500 dark:text-slate-400">0 บท</span>
+        </div>
+        <div id="chapters-list" class="space-y-3"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 3: WORKSPACE (หน้าทำข้อสอบ & ตรวจคำตอบ & โหมดซ่อมข้อที่ผิด)      -->
+  <!-- ===================================================================== -->
+  <div id="view-workspace" class="hidden min-h-screen flex flex-col pb-28">
+    <!-- Clean Sticky Header -->
+    <header class="sticky top-0 z-30 bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/10">
+      <div class="max-w-4xl mx-auto px-4 py-3">
+        <div class="flex items-center justify-between gap-2.5">
+          <!-- Back & Breadcrumb -->
+          <div class="flex items-center gap-2.5 min-w-0 flex-1">
+            <button
+              id="btn-ws-back"
+              type="button"
+              title="กลับหน้ารายละเอียดวิชา"
+              class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 transition active:scale-95 shrink-0"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span id="ws-mode-badge" class="shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold">
+                  ทำข้อสอบ
+                </span>
+                <h2 id="ws-title" class="text-sm sm:text-base font-extrabold truncate">บทที่ 1</h2>
+              </div>
+              <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                <span id="ws-subtitle" class="truncate">ตอบแล้ว 0 / 20 ข้อ</span>
+                <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 shrink-0">
+                  <span id="ws-cache-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <span id="ws-cache-text">บันทึกแล้ว</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Minimal Right Actions -->
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button
+              id="btn-ws-customize"
+              type="button"
+              title="ปรับแต่ง"
+              class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 transition active:scale-95"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Answering Mode Progress & Minimal Tools -->
+        <div id="ws-answer-tools" class="mt-2.5 space-y-2">
+          <div class="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+            <div id="ws-progress-bar" class="h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <!-- Choice Elimination Toggle -->
+            <button
+              id="btn-toggle-eliminate"
+              type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition active:scale-95"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+              </svg>
+              <span id="eliminate-label">ตัดช้อยส์: ปิด</span>
+            </button>
+
+            <!-- Compact Filter Pills -->
+            <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-white/10">
+              <button type="button" data-ans-filter="all" class="ans-filter-tab px-2.5 py-1 rounded-lg text-xs font-bold transition">ทั้งหมด</button>
+              <button type="button" data-ans-filter="unanswered" class="ans-filter-tab px-2.5 py-1 rounded-lg text-xs font-bold transition">ยังไม่ตอบ</button>
+              <button type="button" data-ans-filter="flagged" class="ans-filter-tab px-2.5 py-1 rounded-lg text-xs font-bold transition">ปักธง 🚩</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Workspace Body -->
+    <div class="w-full max-w-4xl mx-auto px-4 pt-5 flex-1">
+
+      <!-- Retake Info Banner (Shown during Mistake Retake sessions) -->
+      <div id="retake-banner" class="hidden mb-4 p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-500/30 flex items-center gap-3 animate-fadeIn">
+        <span class="text-xl shrink-0">🎯</span>
+        <div class="text-xs sm:text-sm text-amber-900 dark:text-amber-200">
+          <p id="retake-banner-title" class="font-extrabold">โหมดซ่อมข้อที่ทำผิด</p>
+          <p class="text-amber-700/90 dark:text-amber-300/80 text-xs mt-0.5">เมื่อตรวจแล้วติ๊ก "ถูก ✓" ข้อนั้นจะถูกปลดออกจากรายการข้อผิดอัตโนมัติ</p>
+        </div>
+      </div>
+
+      <!-- Grade Dashboard (Visible only in Grading Mode) -->
+      <section id="grade-dashboard" class="hidden mb-5 space-y-3.5 animate-fadeIn">
+        <div class="bg-white dark:bg-slate-900/75 backdrop-blur-xl border border-slate-200/90 dark:border-white/10 rounded-3xl p-5 sm:p-6 shadow-xl shadow-slate-200/40 dark:shadow-black/30">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">สรุปคะแนนอัตโนมัติ</span>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span id="score-fraction" class="text-4xl sm:text-5xl font-extrabold tracking-tight">0 / 20</span>
+                <span class="text-slate-500 dark:text-slate-400 font-semibold text-sm">คะแนน</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+              <div id="score-percent-box" class="px-4 py-2 rounded-2xl border text-center">
+                <span id="score-percent" class="text-2xl sm:text-3xl font-extrabold">0.0%</span>
+              </div>
+              <button
+                id="btn-copy-summary"
+                type="button"
+                title="คัดลอกสรุปผลคะแนน"
+                class="p-3 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 transition active:scale-95"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dual-Color Score Bar -->
+          <div class="w-full h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden flex mt-4">
+            <div id="grade-bar-correct" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%"></div>
+            <div id="grade-bar-wrong" class="h-full bg-rose-500 transition-all duration-300" style="width: 0%"></div>
+          </div>
+
+          <!-- Breakdown Stats -->
+          <div class="grid grid-cols-3 gap-2.5 mt-4">
+            <div class="rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-3 text-center">
+              <div class="text-xs font-bold text-emerald-600 dark:text-emerald-300">ถูก ✓</div>
+              <div id="stat-correct" class="text-xl sm:text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">0</div>
+            </div>
+            <div class="rounded-2xl bg-rose-500/10 border border-rose-500/20 p-3 text-center">
+              <div class="text-xs font-bold text-rose-600 dark:text-rose-300">ผิด ✕</div>
+              <div id="stat-wrong" class="text-xl sm:text-2xl font-extrabold text-rose-600 dark:text-rose-400 mt-0.5">0</div>
+            </div>
+            <div class="rounded-2xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-white/10 p-3 text-center">
+              <div class="text-xs font-bold text-slate-500 dark:text-slate-400">รอตรวจ</div>
+              <div id="stat-pending" class="text-xl sm:text-2xl font-extrabold text-slate-700 dark:text-slate-200 mt-0.5">0</div>
+            </div>
+          </div>
+
+          <!-- Instant Retake Wrong CTA inside Grade Dashboard -->
+          <div id="grade-retake-cta-wrap" class="hidden mt-4 pt-4 border-t border-slate-200 dark:border-white/10">
+            <button
+              id="btn-grade-retake-wrong"
+              type="button"
+              class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-rose-500/20 transition active:scale-[0.98] flex items-center justify-center gap-2"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span id="btn-grade-retake-label">ซ่อมเฉพาะข้อที่ผิด (0 ข้อ)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Grade Filter Tabs -->
+        <div class="grid grid-cols-3 gap-1.5 p-1.5 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-white/10">
+          <button type="button" data-filter="all" class="filter-tab py-2 px-2 rounded-xl text-xs sm:text-sm font-bold transition">ทั้งหมด</button>
+          <button type="button" data-filter="correct" class="filter-tab py-2 px-2 rounded-xl text-xs sm:text-sm font-bold transition">ถูก ✓</button>
+          <button type="button" data-filter="wrong" class="filter-tab py-2 px-2 rounded-xl text-xs sm:text-sm font-bold transition">ผิด ✕</button>
+        </div>
+      </section>
+
+      <!-- Question Cards Grid -->
+      <div id="question-list" class="grid grid-cols-1 gap-3"></div>
+
+      <!-- Empty Filter State -->
+      <div id="empty-filter-state" class="hidden text-center py-12 px-4 rounded-3xl bg-white/60 dark:bg-slate-900/40 border border-dashed border-slate-300 dark:border-white/10">
+        <p id="empty-filter-text" class="text-slate-500 dark:text-slate-400 text-sm font-semibold">ไม่มีรายการข้อสอบ</p>
+      </div>
+
+      <!-- Inline Add More Questions (Only in normal Chapter mode) -->
+      <div id="inline-add-wrapper" class="mt-6 flex items-center justify-center gap-3">
+        <button
+          id="btn-inline-add-1"
+          type="button"
+          class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white dark:bg-slate-900/80 hover:bg-slate-100 dark:hover:bg-slate-800 border border-dashed border-slate-300 dark:border-white/20 text-slate-700 dark:text-slate-200 font-bold text-sm sm:text-base transition active:scale-95"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          <span>เพิ่มข้อ (+1)</span>
+        </button>
+
+        <button
+          id="btn-inline-add-5"
+          type="button"
+          class="inline-flex items-center justify-center px-5 py-3.5 rounded-2xl bg-white dark:bg-slate-900/80 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-sm sm:text-base transition active:scale-95"
+        >
+          +5 ข้อ
+        </button>
+      </div>
+    </div>
+
+    <!-- Clean Sticky Bottom Bar -->
+    <nav class="fixed bottom-0 inset-x-0 z-30 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-t border-slate-200/80 dark:border-white/10 px-4 py-3">
+      <div class="max-w-4xl mx-auto">
+        <!-- Bottom Bar: Answering Mode -->
+        <div id="bottom-bar-answer" class="flex items-center gap-2.5">
+          <div id="sticky-add-group" class="flex items-center gap-1.5 shrink-0">
+            <button
+              id="btn-sticky-add-1"
+              type="button"
+              class="inline-flex items-center justify-center gap-1.5 px-4 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white font-bold text-sm sm:text-base transition active:scale-95"
+            >
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              <span>เพิ่มข้อ</span>
+            </button>
+            <button
+              id="btn-sticky-add-5"
+              type="button"
+              class="px-3 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-sm transition active:scale-95"
+            >
+              +5
+            </button>
+          </div>
+
+          <button
+            id="btn-go-grade"
+            type="button"
+            class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-extrabold text-base shadow-lg shadow-emerald-500/25 transition active:scale-[0.98]"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>ตรวจคำตอบ</span>
+          </button>
+        </div>
+
+        <!-- Bottom Bar: Grading Mode -->
+        <div id="bottom-bar-grade" class="hidden flex items-center gap-2.5">
+          <button
+            id="btn-back-answer"
+            type="button"
+            class="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white font-bold text-sm sm:text-base transition active:scale-[0.98]"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+            </svg>
+            <span>แก้ไขคำตอบ</span>
+          </button>
+
+          <button
+            id="btn-grade-done"
+            type="button"
+            class="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-3.5 rounded-2xl text-white font-extrabold text-sm sm:text-base shadow-lg transition active:scale-[0.98]"
+          >
+            <span>เสร็จสิ้น / กลับหน้าวิชา</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- CUSTOMIZE & CACHE MODAL (ปรับแต่งธีม + ขนาดปุ่ม + จัดการแคช)           -->
+  <!-- ===================================================================== -->
+  <div id="customize-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-3xl p-6 shadow-2xl animate-popIn max-h-[88vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-lg font-extrabold">ปรับแต่งกระดาษคำตอบ</h3>
+        <button id="btn-close-customize" type="button" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 transition active:scale-95">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="space-y-5">
+        <!-- Light / Dark Appearance -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">โหมดหน้าจอ</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="btn-mode-dark" type="button" class="py-2.5 px-3 rounded-2xl border text-sm font-bold transition active:scale-95">🌙 โหมดมืด</button>
+            <button id="btn-mode-light" type="button" class="py-2.5 px-3 rounded-2xl border text-sm font-bold transition active:scale-95">☀️ โหมดสว่าง</button>
+          </div>
+        </div>
+
+        <!-- Accent Color -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">สีธีมหลัก</label>
+          <div id="accent-picker" class="grid grid-cols-5 gap-2"></div>
+        </div>
+
+        <!-- Bubble Size -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">ขนาดปุ่มตัวเลือก</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="btn-size-md" type="button" class="py-2.5 px-3 rounded-2xl border text-sm font-bold transition active:scale-95">ขนาดปกติ</button>
+            <button id="btn-size-lg" type="button" class="py-2.5 px-3 rounded-2xl border text-sm font-bold transition active:scale-95">ใหญ่พิเศษ (กดง่าย)</button>
+          </div>
+        </div>
+
+        <!-- Columns Layout -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">การจัดวางบนจอใหญ่</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="btn-cols-1" type="button" class="py-2.5 px-3 rounded-2xl border text-sm font-bold transition active:scale-95">1 คอลัมน์</button>
+            <button id="btn-cols-2" type="button" class="py-2.5 px-3 rounded-2xl border text-sm font-bold transition active:scale-95">2 คอลัมน์</button>
+          </div>
+        </div>
+
+        <!-- Cache & Backup Section -->
+        <div class="pt-4 border-t border-slate-200 dark:border-white/10">
+          <div class="flex items-center justify-between mb-2.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">ข้อมูลในแคชเบราว์เซอร์</span>
+            <span id="cache-size-label" class="text-xs font-bold text-emerald-600 dark:text-emerald-400">0.0 KB</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="btn-export-cache" type="button" class="py-2.5 px-3 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold transition active:scale-95">
+              สำรองข้อมูล (.json)
+            </button>
+            <button id="btn-import-cache" type="button" class="py-2.5 px-3 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold transition active:scale-95">
+              นำเข้าข้อมูล (.json)
+            </button>
+            <input id="input-import-file" type="file" accept=".json,application/json" class="hidden" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- CUSTOM CONFIRM MODAL (No native alert/confirm)                        -->
+  <!-- ===================================================================== -->
+  <div id="confirm-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/65 backdrop-blur-sm">
+    <div class="w-full max-w-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-3xl p-6 shadow-2xl animate-popIn">
+      <h3 id="confirm-title" class="text-lg font-extrabold">ยืนยันการทำรายการ?</h3>
+      <p id="confirm-desc" class="text-slate-500 dark:text-slate-400 text-sm mt-2 leading-relaxed"></p>
+      <div class="grid grid-cols-2 gap-3 mt-6">
+        <button id="btn-confirm-cancel" type="button" class="py-3 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-sm transition active:scale-95">
+          ยกเลิก
+        </button>
+        <button id="btn-confirm-ok" type="button" class="py-3 px-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm shadow-lg shadow-rose-600/20 transition active:scale-95">
+          ยืนยัน
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- APPLICATION LOGIC                                                     -->
+  <!-- ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      // =====================================================================
+      // CONSTANTS & THEME PALETTES
+      // =====================================================================
+      const CACHE_KEY = 'thai_answer_sheet_pro_v2';
+
+      const CHOICE_PRESETS = {
+        th4: { label: 'ก ข ค ง', choices: ['ก', 'ข', 'ค', 'ง'] },
+        th5: { label: 'ก ข ค ง จ', choices: ['ก', 'ข', 'ค', 'ง', 'จ'] },
+        en4: { label: 'A B C D', choices: ['A', 'B', 'C', 'D'] },
+        en5: { label: 'A B C D E', choices: ['A', 'B', 'C', 'D', 'E'] },
+        num4: { label: '1 2 3 4', choices: ['1', '2', '3', '4'] },
+        custom: { label: 'กำหนดเอง...', choices: ['ถูก', 'ผิด'] },
+      };
+
+      const ACCENT_THEMES = {
+        indigo: {
+          name: 'คราม',
+          swatch: 'bg-indigo-500',
+          btn: 'bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-400 hover:to-violet-500 shadow-indigo-500/25',
+          solid: 'bg-indigo-600 text-white',
+          bubbleActive: 'bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-300/60',
+          badge: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border-indigo-400/30',
+          bar: 'bg-gradient-to-r from-indigo-500 to-violet-500',
+          cardActive: 'bg-indigo-50/70 dark:bg-indigo-950/25 border-indigo-300 dark:border-indigo-500/40',
+          glow: 'bg-indigo-600/15',
+        },
+        emerald: {
+          name: 'มรกต',
+          swatch: 'bg-emerald-500',
+          btn: 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 shadow-emerald-500/25',
+          solid: 'bg-emerald-600 text-white',
+          bubbleActive: 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-300/60',
+          badge: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border-emerald-400/30',
+          bar: 'bg-gradient-to-r from-emerald-500 to-teal-500',
+          cardActive: 'bg-emerald-50/70 dark:bg-emerald-950/25 border-emerald-300 dark:border-emerald-500/40',
+          glow: 'bg-emerald-600/15',
+        },
+        sky: {
+          name: 'ฟ้า',
+          swatch: 'bg-sky-500',
+          btn: 'bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 shadow-sky-500/25',
+          solid: 'bg-sky-600 text-white',
+          bubbleActive: 'bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/30 ring-2 ring-sky-300/60',
+          badge: 'bg-sky-500/15 text-sky-600 dark:text-sky-300 border-sky-400/30',
+          bar: 'bg-gradient-to-r from-sky-500 to-blue-500',
+          cardActive: 'bg-sky-50/70 dark:bg-sky-950/25 border-sky-300 dark:border-sky-500/40',
+          glow: 'bg-sky-600/15',
+        },
+        rose: {
+          name: 'กุหลาบ',
+          swatch: 'bg-rose-500',
+          btn: 'bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 shadow-rose-500/25',
+          solid: 'bg-rose-600 text-white',
+          bubbleActive: 'bg-gradient-to-br from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30 ring-2 ring-rose-300/60',
+          badge: 'bg-rose-500/15 text-rose-600 dark:text-rose-300 border-rose-400/30',
+          bar: 'bg-gradient-to-r from-rose-500 to-pink-500',
+          cardActive: 'bg-rose-50/70 dark:bg-rose-950/25 border-rose-300 dark:border-rose-500/40',
+          glow: 'bg-rose-600/15',
+        },
+        amber: {
+          name: 'อำพัน',
+          swatch: 'bg-amber-500',
+          btn: 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 shadow-amber-500/25',
+          solid: 'bg-amber-500 text-slate-950',
+          bubbleActive: 'bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30 ring-2 ring-amber-300/60',
+          badge: 'bg-amber-500/15 text-amber-600 dark:text-amber-300 border-amber-400/30',
+          bar: 'bg-gradient-to-r from-amber-500 to-orange-500',
+          cardActive: 'bg-amber-50/70 dark:bg-amber-950/25 border-amber-300 dark:border-amber-500/40',
+          glow: 'bg-amber-600/15',
+        },
+      };
+
+      // =====================================================================
+      // APPLICATION STATE (Auto-saved in localStorage cache)
+      // =====================================================================
+      let db = {
+        settings: {
+          darkMode: true,
+          accent: 'indigo',
+          bubbleSize: 'md', // 'md' | 'lg'
+          twoColumns: false,
+        },
+        subjects: [], // Array<{ id, name, updatedAt, chapters: Array<{ id, name, choices, questions, updatedAt }> }>
+      };
+
+      // Current view & active session
+      let ui = {
+        view: 'home', // 'home' | 'subject' | 'workspace'
+        selectedSubjectId: null,
+        selectedChoicePreset: 'th4',
+        session: null,
+        // session shape:
+        // {
+        //   type: 'chapter' | 'retake-chapter' | 'retake-subject',
+        //   subjectId: string,
+        //   chapterId: string | null,
+        //   mode: 'answer' | 'grade',
+        //   eliminateMode: boolean,
+        //   answerFilter: 'all' | 'unanswered' | 'flagged',
+        //   gradeFilter: 'all' | 'correct' | 'wrong',
+        //   // For retake sessions only: array of targeted wrong items
+        //   items: Array<{ chapterId, chapterName, qIndex, num, choices, prevAnswer, answer, grade, eliminated, flagged }>
+        // }
+      };
+
+      let pendingConfirmAction = null;
+      let cachePulseTimer = null;
+
+      function uid(prefix) {
+        return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+      }
+
+      function getTheme() {
+        return ACCENT_THEMES[db.settings.accent] || ACCENT_THEMES.indigo;
+      }
+
+      function escapeHtml(str) {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      // =====================================================================
+      // CACHE PERSISTENCE (localStorage)
+      // =====================================================================
+      function loadCache() {
+        try {
+          const raw = localStorage.getItem(CACHE_KEY);
+          if (!raw) return;
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            if (parsed.settings) {
+              db.settings.darkMode = parsed.settings.darkMode !== false;
+              if (ACCENT_THEMES[parsed.settings.accent]) db.settings.accent = parsed.settings.accent;
+              if (['md', 'lg'].includes(parsed.settings.bubbleSize)) db.settings.bubbleSize = parsed.settings.bubbleSize;
+              db.settings.twoColumns = Boolean(parsed.settings.twoColumns);
+            }
+            if (Array.isArray(parsed.subjects)) {
+              db.subjects = parsed.subjects;
+            }
+          }
+        } catch (err) {
+          console.error('Failed to load cache:', err);
+        }
+      }
+
+      function saveCache() {
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify(db));
+          pulseCacheIndicator();
+        } catch (err) {
+          console.error('Failed to save cache:', err);
+          showToast('พื้นที่แคชเบราว์เซอร์เต็ม ไม่สามารถบันทึกได้', 'error');
+        }
+      }
+
+      function pulseCacheIndicator() {
+        if (!el.wsCacheText || !el.wsCacheDot) return;
+        el.wsCacheText.textContent = 'กำลังบันทึก...';
+        el.wsCacheDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping';
+        clearTimeout(cachePulseTimer);
+        cachePulseTimer = setTimeout(() => {
+          el.wsCacheText.textContent = 'บันทึกแคชแล้ว';
+          el.wsCacheDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-500';
+        }, 300);
+      }
+
+      function getCacheSizeKB() {
+        try {
+          const raw = localStorage.getItem(CACHE_KEY) || '';
+          return (new Blob([raw]).size / 1024).toFixed(1);
+        } catch {
+          return '0.0';
+        }
+      }
+
+      // =====================================================================
+      // DOM REFERENCES
+      // =====================================================================
+      const el = {
+        glow1: document.getElementById('glow-1'),
+        toastContainer: document.getElementById('toast-container'),
+
+        // Home
+        viewHome: document.getElementById('view-home'),
+        brandIcon: document.getElementById('brand-icon'),
+        btnOpenCustomizeHome: document.getElementById('btn-open-customize-home'),
+        createForm: document.getElementById('create-form'),
+        inputSubject: document.getElementById('input-subject'),
+        subjectQuickChips: document.getElementById('subject-quick-chips'),
+        inputChapter: document.getElementById('input-chapter'),
+        inputCount: document.getElementById('input-count'),
+        presetBtns: document.querySelectorAll('.preset-btn'),
+        choiceStyleGrid: document.getElementById('choice-style-grid'),
+        customChoicesWrap: document.getElementById('custom-choices-wrap'),
+        inputCustomChoices: document.getElementById('input-custom-choices'),
+        btnStartSheet: document.getElementById('btn-start-sheet'),
+        homeSubjectCount: document.getElementById('home-subject-count'),
+        subjectsGrid: document.getElementById('subjects-grid'),
+        subjectsEmpty: document.getElementById('subjects-empty'),
+
+        // Subject View
+        viewSubject: document.getElementById('view-subject'),
+        btnSubjectBack: document.getElementById('btn-subject-back'),
+        subjectHeaderName: document.getElementById('subject-header-name'),
+        btnSubjectDelete: document.getElementById('btn-subject-delete'),
+        subjectHeroName: document.getElementById('subject-hero-name'),
+        subjectHeroStats: document.getElementById('subject-hero-stats'),
+        btnAddChapterInSubject: document.getElementById('btn-add-chapter-in-subject'),
+        subStatCorrect: document.getElementById('sub-stat-correct'),
+        subStatWrong: document.getElementById('sub-stat-wrong'),
+        subStatPending: document.getElementById('sub-stat-pending'),
+        subjectWrongBox: document.getElementById('subject-wrong-box'),
+        subjectWrongBadge: document.getElementById('subject-wrong-badge'),
+        subjectWrongBreakdown: document.getElementById('subject-wrong-breakdown'),
+        btnRetakeSubject: document.getElementById('btn-retake-subject'),
+        btnRetakeSubjectLabel: document.getElementById('btn-retake-subject-label'),
+        subjectAllClear: document.getElementById('subject-all-clear'),
+        subjectChapterCount: document.getElementById('subject-chapter-count'),
+        chaptersList: document.getElementById('chapters-list'),
+
+        // Workspace View
+        viewWorkspace: document.getElementById('view-workspace'),
+        btnWsBack: document.getElementById('btn-ws-back'),
+        wsModeBadge: document.getElementById('ws-mode-badge'),
+        wsTitle: document.getElementById('ws-title'),
+        wsSubtitle: document.getElementById('ws-subtitle'),
+        wsCacheDot: document.getElementById('ws-cache-dot'),
+        wsCacheText: document.getElementById('ws-cache-text'),
+        btnWsCustomize: document.getElementById('btn-ws-customize'),
+        wsAnswerTools: document.getElementById('ws-answer-tools'),
+        wsProgressBar: document.getElementById('ws-progress-bar'),
+        btnToggleEliminate: document.getElementById('btn-toggle-eliminate'),
+        eliminateLabel: document.getElementById('eliminate-label'),
+        ansFilterTabs: document.querySelectorAll('.ans-filter-tab'),
+        retakeBanner: document.getElementById('retake-banner'),
+        retakeBannerTitle: document.getElementById('retake-banner-title'),
+
+        // Grade Dashboard
+        gradeDashboard: document.getElementById('grade-dashboard'),
+        scoreFraction: document.getElementById('score-fraction'),
+        scorePercentBox: document.getElementById('score-percent-box'),
+        scorePercent: document.getElementById('score-percent'),
+        btnCopySummary: document.getElementById('btn-copy-summary'),
+        gradeBarCorrect: document.getElementById('grade-bar-correct'),
+        gradeBarWrong: document.getElementById('grade-bar-wrong'),
+        statCorrect: document.getElementById('stat-correct'),
+        statWrong: document.getElementById('stat-wrong'),
+        statPending: document.getElementById('stat-pending'),
+        gradeRetakeCtaWrap: document.getElementById('grade-retake-cta-wrap'),
+        btnGradeRetakeWrong: document.getElementById('btn-grade-retake-wrong'),
+        btnGradeRetakeLabel: document.getElementById('btn-grade-retake-label'),
+        filterTabs: document.querySelectorAll('.filter-tab'),
+
+        // Questions & Bottom Bar
+        questionList: document.getElementById('question-list'),
+        emptyFilterState: document.getElementById('empty-filter-state'),
+        emptyFilterText: document.getElementById('empty-filter-text'),
+        inlineAddWrapper: document.getElementById('inline-add-wrapper'),
+        btnInlineAdd1: document.getElementById('btn-inline-add-1'),
+        btnInlineAdd5: document.getElementById('btn-inline-add-5'),
+        bottomBarAnswer: document.getElementById('bottom-bar-answer'),
+        stickyAddGroup: document.getElementById('sticky-add-group'),
+        btnStickyAdd1: document.getElementById('btn-sticky-add-1'),
+        btnStickyAdd5: document.getElementById('btn-sticky-add-5'),
+        btnGoGrade: document.getElementById('btn-go-grade'),
+        bottomBarGrade: document.getElementById('bottom-bar-grade'),
+        btnBackAnswer: document.getElementById('btn-back-answer'),
+        btnGradeDone: document.getElementById('btn-grade-done'),
+
+        // Customize Modal
+        customizeModal: document.getElementById('customize-modal'),
+        btnCloseCustomize: document.getElementById('btn-close-customize'),
+        btnModeDark: document.getElementById('btn-mode-dark'),
+        btnModeLight: document.getElementById('btn-mode-light'),
+        accentPicker: document.getElementById('accent-picker'),
+        btnSizeMd: document.getElementById('btn-size-md'),
+        btnSizeLg: document.getElementById('btn-size-lg'),
+        btnCols1: document.getElementById('btn-cols-1'),
+        btnCols2: document.getElementById('btn-cols-2'),
+        cacheSizeLabel: document.getElementById('cache-size-label'),
+        btnExportCache: document.getElementById('btn-export-cache'),
+        btnImportCache: document.getElementById('btn-import-cache'),
+        inputImportFile: document.getElementById('input-import-file'),
+
+        // Confirm Modal
+        confirmModal: document.getElementById('confirm-modal'),
+        confirmTitle: document.getElementById('confirm-title'),
+        confirmDesc: document.getElementById('confirm-desc'),
+        btnConfirmCancel: document.getElementById('btn-confirm-cancel'),
+        btnConfirmOk: document.getElementById('btn-confirm-ok'),
+      };
+
+      // =====================================================================
+      // TOAST & CONFIRM MODAL
+      // =====================================================================
+      function showToast(msg, type = 'info') {
+        const toast = document.createElement('div');
+        const tone =
+          type === 'success'
+            ? 'bg-emerald-600 text-white border-emerald-400/40'
+            : type === 'error'
+            ? 'bg-rose-600 text-white border-rose-400/40'
+            : 'bg-slate-900 dark:bg-slate-800 text-white border-white/15';
+        toast.className = `px-4 py-2.5 rounded-2xl border shadow-xl text-sm font-bold animate-popIn ${tone}`;
+        toast.textContent = msg;
+        el.toastContainer.appendChild(toast);
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+          setTimeout(() => toast.remove(), 300);
+        }, 2100);
+      }
+
+      function openConfirm(title, desc, okLabel, onConfirm) {
+        el.confirmTitle.textContent = title;
+        el.confirmDesc.textContent = desc;
+        el.btnConfirmOk.textContent = okLabel || 'ยืนยัน';
+        pendingConfirmAction = onConfirm;
+        el.confirmModal.classList.remove('hidden');
+      }
+
+      function closeConfirm() {
+        el.confirmModal.classList.add('hidden');
+        pendingConfirmAction = null;
+      }
+
+      // =====================================================================
+      // THEME & APPEARANCE APPLICATION
+      // =====================================================================
+      function applyAppearance() {
+        const theme = getTheme();
+        document.documentElement.classList.toggle('dark', db.settings.darkMode);
+
+        el.brandIcon.className = `w-10 h-10 rounded-2xl ${theme.solid} flex items-center justify-center shadow-md shrink-0`;
+        el.glow1.className = `absolute -top-32 -left-24 w-96 h-96 ${theme.glow} rounded-full blur-3xl transition-colors duration-500`;
+        el.btnStartSheet.className = `w-full py-4 px-6 rounded-2xl text-white font-extrabold text-base sm:text-lg shadow-lg transition active:scale-[0.98] flex items-center justify-center gap-2 ${theme.btn}`;
+        el.btnGradeDone.className = `flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-3.5 rounded-2xl text-white font-extrabold text-sm sm:text-base shadow-lg transition active:scale-[0.98] ${theme.btn}`;
+        el.wsProgressBar.className = `h-full rounded-full transition-all duration-300 ${theme.bar}`;
+        el.scorePercentBox.className = `px-4 py-2 rounded-2xl border text-center ${theme.badge}`;
+      }
+
+      function renderCustomizeModal() {
+        const theme = getTheme();
+        const activeBtn = `${theme.solid} border-transparent shadow-md`;
+        const idleBtn = 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300';
+
+        el.btnModeDark.className = `py-2.5 px-3 rounded-2xl border text-sm font-bold transition active:scale-95 ${db.settings.darkMode ? activeBtn : idleBtn}`;
+        el.btnModeLight.className = `py-2.5 px-3 rounded-2xl border text-sm font-bold transition active:scale-95 ${!db.settings.darkMode ? activeBtn : idleBtn}`;
+
+        el.btnSizeMd.className = `py-2.5 px-3 rounded-2xl border text-sm font-bold transition active:scale-95 ${db.settings.bubbleSize === 'md' ? activeBtn : idleBtn}`;
+        el.btnSizeLg.className = `py-2.5 px-3 rounded-2xl border text-sm font-bold transition active:scale-95 ${db.settings.bubbleSize === 'lg' ? activeBtn : idleBtn}`;
+
+        el.btnCols1.className = `py-2.5 px-3 rounded-2xl border text-sm font-bold transition active:scale-95 ${!db.settings.twoColumns ? activeBtn : idleBtn}`;
+        el.btnCols2.className = `py-2.5 px-3 rounded-2xl border text-sm font-bold transition active:scale-95 ${db.settings.twoColumns ? activeBtn : idleBtn}`;
+
+        el.accentPicker.innerHTML = '';
+        Object.entries(ACCENT_THEMES).forEach(([key, cfg]) => {
+          const isSelected = db.settings.accent === key;
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = `flex flex-col items-center gap-1 p-2 rounded-2xl border transition active:scale-95 ${
+            isSelected
+              ? 'border-slate-900 dark:border-white bg-slate-100 dark:bg-slate-800'
+              : 'border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-slate-800/60'
+          }`;
+          b.innerHTML = `
+            <span class="w-6 h-6 rounded-full ${cfg.swatch} ${isSelected ? 'ring-2 ring-offset-2 ring-slate-900 dark:ring-white dark:ring-offset-slate-900' : ''}"></span>
+            <span class="text-[11px] font-bold">${cfg.name}</span>
+          `;
+          b.addEventListener('click', () => {
+            db.settings.accent = key;
+            saveCache();
+            applyAppearance();
+            renderCustomizeModal();
+            renderCurrentView();
+          });
+          el.accentPicker.appendChild(b);
+        });
+
+        el.cacheSizeLabel.textContent = `${getCacheSizeKB()} KB`;
+      }
+
+      // =====================================================================
+      // DATA HELPERS (SUBJECTS, CHAPTERS, WRONG QUESTIONS)
+      // =====================================================================
+      function getSubject(subjectId) {
+        return db.subjects.find((s) => s.id === subjectId) || null;
+      }
+
+      function getChapter(subjectId, chapterId) {
+        const sub = getSubject(subjectId);
+        if (!sub) return null;
+        return sub.chapters.find((c) => c.id === chapterId) || null;
+      }
+
+      function getChapterStats(ch) {
+        const total = ch.questions.length;
+        let answered = 0;
+        let correct = 0;
+        let wrong = 0;
+        const wrongNums = [];
+
+        ch.questions.forEach((q, idx) => {
+          const num = q.num || idx + 1;
+          if (q.answer !== null) answered++;
+          if (q.grade === 'correct') correct++;
+          else if (q.grade === 'wrong') {
+            wrong++;
+            wrongNums.push(num);
+          }
+        });
+
+        return { total, answered, correct, wrong, pending: total - correct - wrong, wrongNums };
+      }
+
+      function getSubjectStats(sub) {
+        let total = 0;
+        let correct = 0;
+        let wrong = 0;
+        let pending = 0;
+        const wrongByChapter = [];
+
+        sub.chapters.forEach((ch) => {
+          const st = getChapterStats(ch);
+          total += st.total;
+          correct += st.correct;
+          wrong += st.wrong;
+          pending += st.pending;
+          if (st.wrongNums.length > 0) {
+            wrongByChapter.push({
+              chapterId: ch.id,
+              chapterName: ch.name,
+              nums: st.wrongNums,
+            });
+          }
+        });
+
+        return { chapterCount: sub.chapters.length, total, correct, wrong, pending, wrongByChapter };
+      }
+
+      // =====================================================================
+      // VIEW 1: HOME RENDERING
+      // =====================================================================
+      function renderChoicePresets() {
+        const theme = getTheme();
+        el.choiceStyleGrid.innerHTML = '';
+        Object.entries(CHOICE_PRESETS).forEach(([key, cfg]) => {
+          const isSelected = ui.selectedChoicePreset === key;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = `py-2.5 px-3 rounded-xl text-sm font-bold border transition active:scale-95 text-center ${
+            isSelected
+              ? `${theme.solid} border-transparent shadow-md`
+              : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`;
+          btn.textContent = cfg.label;
+          btn.addEventListener('click', () => {
+            ui.selectedChoicePreset = key;
+            el.customChoicesWrap.classList.toggle('hidden', key !== 'custom');
+            renderChoicePresets();
+          });
+          el.choiceStyleGrid.appendChild(btn);
+        });
+      }
+
+      function updatePresetPills(val) {
+        const theme = getTheme();
+        const num = parseInt(val, 10);
+        el.presetBtns.forEach((btn) => {
+          const p = parseInt(btn.dataset.preset, 10);
+          if (p === num) {
+            btn.className = `preset-btn py-2.5 rounded-xl text-sm font-bold border transition active:scale-95 ${theme.solid} border-transparent shadow-sm`;
+          } else {
+            btn.className =
+              'preset-btn py-2.5 rounded-xl text-sm font-bold border transition active:scale-95 bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800';
+          }
+        });
+      }
+
+      function renderHomeView() {
+        renderChoicePresets();
+        updatePresetPills(el.inputCount.value);
+
+        // Existing subject quick-fill chips
+        el.subjectQuickChips.innerHTML = '';
+        db.subjects.slice(0, 6).forEach((sub) => {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className =
+            'px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition active:scale-95';
+          chip.textContent = sub.name;
+          chip.addEventListener('click', () => {
+            el.inputSubject.value = sub.name;
+            el.inputChapter.focus();
+          });
+          el.subjectQuickChips.appendChild(chip);
+        });
+
+        // Subjects Grid
+        el.homeSubjectCount.textContent = `${db.subjects.length} วิชา`;
+        el.subjectsGrid.innerHTML = '';
+
+        if (db.subjects.length === 0) {
+          el.subjectsEmpty.classList.remove('hidden');
+          return;
+        }
+        el.subjectsEmpty.classList.add('hidden');
+
+        const sorted = [...db.subjects].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+        sorted.forEach((sub) => {
+          const st = getSubjectStats(sub);
+          const card = document.createElement('div');
+          card.className =
+            'group cursor-pointer bg-white dark:bg-slate-900/75 hover:border-slate-300 dark:hover:border-white/25 border border-slate-200/90 dark:border-white/10 rounded-3xl p-5 shadow-md shadow-slate-200/30 dark:shadow-black/30 transition active:scale-[0.99] flex flex-col justify-between gap-4';
+
+          card.innerHTML = `
+            <div>
+              <div class="flex items-start justify-between gap-2">
+                <h3 class="text-lg font-extrabold truncate">${escapeHtml(sub.name)}</h3>
+                ${
+                  st.wrong > 0
+                    ? `<span class="shrink-0 px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-rose-500/15 text-rose-600 dark:text-rose-300 border border-rose-500/30">ผิด ${st.wrong} ข้อ</span>`
+                    : st.correct > 0
+                    ? `<span class="shrink-0 px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30">ครบแล้ว ✓</span>`
+                    : `<span class="shrink-0 px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">${st.chapterCount} บท</span>`
+                }
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                ${st.chapterCount} บท • ทั้งหมด ${st.total} ข้อ (ถูก ${st.correct} / ผิด ${st.wrong})
+              </p>
+            </div>
+
+            <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-white/5 text-xs font-bold">
+              <span class="text-slate-500 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-white transition">ดูบทเรียนทั้งหมด →</span>
+              ${
+                st.wrong > 0
+                  ? `<span class="text-rose-500 dark:text-rose-400">พร้อมซ่อมข้อผิด</span>`
+                  : ''
+              }
+            </div>
+          `;
+
+          card.addEventListener('click', () => openSubjectView(sub.id));
+          el.subjectsGrid.appendChild(card);
+        });
+      }
+
+      // =====================================================================
+      // VIEW 2: SUBJECT DETAIL RENDERING
+      // =====================================================================
+      function openSubjectView(subjectId) {
+        ui.selectedSubjectId = subjectId;
+        ui.session = null;
+        ui.view = 'subject';
+        renderCurrentView();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function renderSubjectView() {
+        const sub = getSubject(ui.selectedSubjectId);
+        if (!sub) {
+          ui.view = 'home';
+          renderCurrentView();
+          return;
+        }
+
+        const st = getSubjectStats(sub);
+        el.subjectHeaderName.textContent = sub.name;
+        el.subjectHeroName.textContent = sub.name;
+        el.subjectHeroStats.textContent = `${st.chapterCount} บท • ทั้งหมด ${st.total} ข้อ`;
+        el.subStatCorrect.textContent = st.correct;
+        el.subStatWrong.textContent = st.wrong;
+        el.subStatPending.textContent = st.pending;
+
+        // Whole-Subject Wrong Breakdown & Retake CTA
+        if (st.wrong > 0) {
+          el.subjectWrongBox.classList.remove('hidden');
+          el.subjectAllClear.classList.add('hidden');
+          el.subjectWrongBadge.textContent = `${st.wrong} ข้อ`;
+          el.btnRetakeSubjectLabel.textContent = `ซ่อมข้อที่ผิดทั้งวิชา (${st.wrong} ข้อ)`;
+
+          el.subjectWrongBreakdown.innerHTML = st.wrongByChapter
+            .map(
+              (item) =>
+                `<div class="flex items-baseline gap-1.5">
+                  <span class="font-bold shrink-0">• ${escapeHtml(item.chapterName)}:</span>
+                  <span class="opacity-90">ข้อ ${item.nums.join(', ')}</span>
+                </div>`
+            )
+            .join('');
+        } else {
+          el.subjectWrongBox.classList.add('hidden');
+          el.subjectAllClear.classList.toggle('hidden', st.correct === 0);
+        }
+
+        // Chapters List
+        el.subjectChapterCount.textContent = `${sub.chapters.length} บท`;
+        el.chaptersList.innerHTML = '';
+
+        sub.chapters.forEach((ch) => {
+          const cst = getChapterStats(ch);
+          const card = document.createElement('div');
+          card.className =
+            'bg-white dark:bg-slate-900/75 border border-slate-200/90 dark:border-white/10 rounded-3xl p-4 sm:p-5 shadow-sm transition';
+
+          const wrongText =
+            cst.wrongNums.length > 0
+              ? `<div class="mt-2.5 px-3 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200/80 dark:border-rose-500/25 text-xs text-rose-700 dark:text-rose-300 font-semibold">
+                  ผิด ${cst.wrongNums.length} ข้อ: ข้อ ${cst.wrongNums.join(', ')}
+                 </div>`
+              : cst.correct > 0 && cst.pending === 0
+              ? `<div class="mt-2.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-500/25 text-xs text-emerald-700 dark:text-emerald-300 font-bold inline-block">
+                  ✓ ถูกครบทุกข้อแล้ว (${cst.correct}/${cst.total})
+                 </div>`
+              : '';
+
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <h4 class="text-base sm:text-lg font-extrabold truncate">${escapeHtml(ch.name)}</h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  ${cst.total} ข้อ • ตอบแล้ว ${cst.answered}/${cst.total} • ถูก ${cst.correct} • ผิด ${cst.wrong}
+                </p>
+              </div>
+              <button type="button" data-del-ch="${ch.id}" title="ลบบทนี้" class="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition active:scale-95 shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+            ${wrongText}
+            <div class="flex flex-wrap items-center gap-2 mt-4">
+              <button type="button" data-open-ch="${ch.id}" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-xs sm:text-sm font-bold transition active:scale-95">
+                เปิดกระดาษคำตอบ
+              </button>
+              ${
+                cst.wrong > 0
+                  ? `<button type="button" data-retake-ch="${ch.id}" class="flex-1 py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs sm:text-sm font-extrabold shadow-md shadow-rose-600/20 transition active:scale-95">
+                      ซ่อมข้อที่ผิด (${cst.wrong})
+                    </button>`
+                  : ''
+              }
+            </div>
+          `;
+
+          card.querySelector(`[data-open-ch="${ch.id}"]`).addEventListener('click', () => startChapterSession(sub.id, ch.id));
+          const retakeBtn = card.querySelector(`[data-retake-ch="${ch.id}"]`);
+          if (retakeBtn) {
+            retakeBtn.addEventListener('click', () => startRetakeChapterSession(sub.id, ch.id));
+          }
+          card.querySelector(`[data-del-ch="${ch.id}"]`).addEventListener('click', () => {
+            openConfirm('ลบบทเรียนนี้?', `ต้องการลบ "${ch.name}" ออกจากวิชา ${sub.name} หรือไม่?`, 'ลบเลย', () => {
+              sub.chapters = sub.chapters.filter((c) => c.id !== ch.id);
+              sub.updatedAt = Date.now();
+              saveCache();
+              renderSubjectView();
+              showToast(`ลบ "${ch.name}" แล้ว`);
+            });
+          });
+
+          el.chaptersList.appendChild(card);
+        });
+      }
+
+      // =====================================================================
+      // START WORKSPACE SESSIONS (NORMAL, RETAKE CHAPTER, RETAKE SUBJECT)
+      // =====================================================================
+      function startChapterSession(subjectId, chapterId, initialMode = 'answer') {
+        ui.selectedSubjectId = subjectId;
+        ui.session = {
+          type: 'chapter',
+          subjectId,
+          chapterId,
+          mode: initialMode,
+          eliminateMode: false,
+          answerFilter: 'all',
+          gradeFilter: 'all',
+          items: [],
+        };
+        ui.view = 'workspace';
+        renderCurrentView();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function startRetakeChapterSession(subjectId, chapterId) {
+        const ch = getChapter(subjectId, chapterId);
+        if (!ch) return;
+
+        const wrongItems = [];
+        ch.questions.forEach((q, idx) => {
+          if (q.grade === 'wrong') {
+            wrongItems.push({
+              chapterId: ch.id,
+              chapterName: ch.name,
+              qIndex: idx,
+              num: q.num || idx + 1,
+              choices: ch.choices,
+              prevAnswer: q.answer,
+              answer: null,
+              grade: null,
+              eliminated: [],
+              flagged: false,
+            });
+          }
+        });
+
+        if (wrongItems.length === 0) {
+          showToast('🎉 บทนี้ไม่มีข้อที่ผิดค้างอยู่แล้ว!', 'success');
+          return;
+        }
+
+        ui.selectedSubjectId = subjectId;
+        ui.session = {
+          type: 'retake-chapter',
+          subjectId,
+          chapterId,
+          mode: 'answer',
+          eliminateMode: false,
+          answerFilter: 'all',
+          gradeFilter: 'all',
+          items: wrongItems,
+        };
+        ui.view = 'workspace';
+        renderCurrentView();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function startRetakeSubjectSession(subjectId) {
+        const sub = getSubject(subjectId);
+        if (!sub) return;
+
+        const wrongItems = [];
+        sub.chapters.forEach((ch) => {
+          ch.questions.forEach((q, idx) => {
+            if (q.grade === 'wrong') {
+              wrongItems.push({
+                chapterId: ch.id,
+                chapterName: ch.name,
+                qIndex: idx,
+                num: q.num || idx + 1,
+                choices: ch.choices,
+                prevAnswer: q.answer,
+                answer: null,
+                grade: null,
+                eliminated: [],
+                flagged: false,
+              });
+            }
+          });
+        });
+
+        if (wrongItems.length === 0) {
+          showToast('🎉 วิชานี้ไม่มีข้อที่ผิดค้างอยู่แล้ว!', 'success');
+          return;
+        }
+
+        ui.selectedSubjectId = subjectId;
+        ui.session = {
+          type: 'retake-subject',
+          subjectId,
+          chapterId: null,
+          mode: 'answer',
+          eliminateMode: false,
+          answerFilter: 'all',
+          gradeFilter: 'all',
+          items: wrongItems,
+        };
+        ui.view = 'workspace';
+        renderCurrentView();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // =====================================================================
+      // VIEW 3: WORKSPACE RENDERING & LOGIC
+      // =====================================================================
+      function getSessionList() {
+        const s = ui.session;
+        if (!s) return [];
+        if (s.type === 'chapter') {
+          const ch = getChapter(s.subjectId, s.chapterId);
+          return ch ? ch.questions : [];
+        }
+        return s.items;
+      }
+
+      function getSessionStats() {
+        const list = getSessionList();
+        const total = list.length;
+        let answered = 0;
+        let correct = 0;
+        let wrong = 0;
+        let flagged = 0;
+
+        list.forEach((q) => {
+          if (q.answer !== null) answered++;
+          if (q.grade === 'correct') correct++;
+          else if (q.grade === 'wrong') wrong++;
+          if (q.flagged) flagged++;
+        });
+
+        return {
+          total,
+          answered,
+          unanswered: total - answered,
+          flagged,
+          correct,
+          wrong,
+          pending: total - correct - wrong,
+          percent: total > 0 ? (correct / total) * 100 : 0,
+        };
+      }
+
+      function updateWorkspaceHeader() {
+        const s = ui.session;
+        const theme = getTheme();
+        const sub = getSubject(s.subjectId);
+        const ch = s.chapterId ? getChapter(s.subjectId, s.chapterId) : null;
+        const st = getSessionStats();
+
+        if (s.type === 'chapter') {
+          el.wsTitle.textContent = `${sub ? sub.name : ''} › ${ch ? ch.name : ''}`;
+          el.retakeBanner.classList.add('hidden');
+        } else if (s.type === 'retake-chapter') {
+          el.wsTitle.textContent = `ซ่อมข้อผิด › ${ch ? ch.name : ''}`;
+          el.retakeBanner.classList.remove('hidden');
+          el.retakeBannerTitle.textContent = `ซ่อมข้อที่ผิดใน ${ch ? ch.name : ''} (${st.total} ข้อ)`;
+        } else {
+          el.wsTitle.textContent = `ซ่อมข้อผิดทั้งวิชา › ${sub ? sub.name : ''}`;
+          el.retakeBanner.classList.remove('hidden');
+          el.retakeBannerTitle.textContent = `ซ่อมข้อที่ผิดทั้งวิชา ${sub ? sub.name : ''} (${st.total} ข้อ)`;
+        }
+
+        if (s.mode === 'answer') {
+          el.wsModeBadge.textContent = s.type === 'chapter' ? 'ทำข้อสอบ' : 'ซ่อมข้อผิด';
+          el.wsModeBadge.className = `shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold border ${
+            s.type === 'chapter' ? theme.badge : 'bg-amber-500/15 text-amber-600 dark:text-amber-300 border-amber-400/30'
+          }`;
+          el.wsSubtitle.textContent = `ตอบแล้ว ${st.answered} / ${st.total} ข้อ`;
+          el.wsProgressBar.style.width = `${st.total > 0 ? (st.answered / st.total) * 100 : 0}%`;
+
+          // Eliminate toggle button
+          if (s.eliminateMode) {
+            el.btnToggleEliminate.className =
+              'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition active:scale-95 bg-rose-500/15 border-rose-400/60 text-rose-600 dark:text-rose-300';
+            el.eliminateLabel.textContent = 'ตัดช้อยส์: เปิดอยู่';
+          } else {
+            el.btnToggleEliminate.className =
+              'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition active:scale-95 bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300';
+            el.eliminateLabel.textContent = 'ตัดช้อยส์: ปิด';
+          }
+
+          // Answer filter tabs
+          el.ansFilterTabs.forEach((tab) => {
+            const f = tab.dataset.ansFilter;
+            const active = s.answerFilter === f;
+            if (f === 'all') {
+              tab.textContent = `ทั้งหมด (${st.total})`;
+              tab.className = `ans-filter-tab px-2.5 py-1 rounded-lg text-xs font-bold transition ${
+                active ? `${theme.solid} shadow-sm` : 'text-slate-500 dark:text-slate-400'
+              }`;
+            } else if (f === 'unanswered') {
+              tab.textContent = `ยังไม่ตอบ (${st.unanswered})`;
+              tab.className = `ans-filter-tab px-2.5 py-1 rounded-lg text-xs font-bold transition ${
+                active ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-500 dark:text-slate-400'
+              }`;
+            } else {
+              tab.textContent = `ปักธง (${st.flagged})`;
+              tab.className = `ans-filter-tab px-2.5 py-1 rounded-lg text-xs font-bold transition ${
+                active ? 'bg-amber-500 text-slate-950 shadow-sm' : 'text-slate-500 dark:text-slate-400'
+              }`;
+            }
+          });
+        } else {
+          el.wsModeBadge.textContent = 'ตรวจคำตอบ';
+          el.wsModeBadge.className =
+            'shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold border bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border-emerald-400/30';
+          el.wsSubtitle.textContent = `คะแนน ${st.correct} / ${st.total} (${st.percent.toFixed(0)}%)`;
+
+          el.scoreFraction.textContent = `${st.correct} / ${st.total}`;
+          el.scorePercent.textContent = `${st.percent.toFixed(1)}%`;
+          el.statCorrect.textContent = st.correct;
+          el.statWrong.textContent = st.wrong;
+          el.statPending.textContent = st.pending;
+
+          el.gradeBarCorrect.style.width = `${st.total > 0 ? (st.correct / st.total) * 100 : 0}%`;
+          el.gradeBarWrong.style.width = `${st.total > 0 ? (st.wrong / st.total) * 100 : 0}%`;
+
+          // Show instant retake button inside grade dashboard whenever there are wrong questions!
+          if (st.wrong > 0) {
+            el.gradeRetakeCtaWrap.classList.remove('hidden');
+            el.btnGradeRetakeLabel.textContent =
+              s.type === 'chapter'
+                ? `ซ่อมเฉพาะข้อที่ผิด (${st.wrong} ข้อ)`
+                : `ซ่อมข้อที่ยังผิดต่อ (${st.wrong} ข้อ)`;
+          } else {
+            el.gradeRetakeCtaWrap.classList.add('hidden');
+          }
+
+          el.filterTabs.forEach((tab) => {
+            const f = tab.dataset.filter;
+            const active = s.gradeFilter === f;
+            if (f === 'all') {
+              tab.textContent = `ทั้งหมด (${st.total})`;
+              tab.className = `filter-tab py-2 px-2 rounded-xl text-xs sm:text-sm font-bold transition ${
+                active ? `${theme.solid} shadow-sm` : 'text-slate-500 dark:text-slate-400'
+              }`;
+            } else if (f === 'correct') {
+              tab.textContent = `ถูก ✓ (${st.correct})`;
+              tab.className = `filter-tab py-2 px-2 rounded-xl text-xs sm:text-sm font-bold transition ${
+                active ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-500 dark:text-slate-400'
+              }`;
+            } else {
+              tab.textContent = `ผิด ✕ (${st.wrong})`;
+              tab.className = `filter-tab py-2 px-2 rounded-xl text-xs sm:text-sm font-bold transition ${
+                active ? 'bg-rose-600 text-white shadow-sm' : 'text-slate-500 dark:text-slate-400'
+              }`;
+            }
+          });
+        }
+      }
+
+      function createAnswerCard(idx) {
+        const s = ui.session;
+        const theme = getTheme();
+        const list = getSessionList();
+        const q = list[idx];
+        const isRetake = s.type !== 'chapter';
+        const ch = s.type === 'chapter' ? getChapter(s.subjectId, s.chapterId) : null;
+        const choices = isRetake ? q.choices : ch.choices;
+        const displayNum = isRetake ? q.num : q.num || idx + 1;
+
+        const isLast = !isRetake && idx === list.length - 1;
+        const canRemove = isLast && list.length > 1 && q.answer === null && q.grade === null;
+        const bubbleHeight = db.settings.bubbleSize === 'lg' ? 'h-14 text-xl' : 'h-12 text-lg';
+
+        const card = document.createElement('div');
+        card.id = `q-card-${idx}`;
+        card.className = `rounded-2xl p-4 sm:px-5 border transition-all duration-150 ${
+          q.flagged
+            ? 'bg-amber-50/70 dark:bg-amber-950/20 border-amber-300 dark:border-amber-500/45'
+            : q.answer !== null
+            ? theme.cardActive
+            : 'bg-white dark:bg-slate-900/65 border-slate-200/90 dark:border-white/10'
+        }`;
+
+        const inner = document.createElement('div');
+        inner.className = 'flex flex-col sm:flex-row sm:items-center justify-between gap-3';
+
+        // Left: Number + Chapter tag (for whole-subject retake) + Previous wrong answer + Flag
+        const leftBox = document.createElement('div');
+        leftBox.className = 'flex items-center justify-between sm:justify-start gap-2';
+
+        const labelWrap = document.createElement('div');
+        labelWrap.className = 'flex items-center flex-wrap gap-1.5';
+        labelWrap.innerHTML = `
+          ${
+            s.type === 'retake-subject'
+              ? `<span class="px-2 py-0.5 rounded-lg text-[11px] font-bold bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300">${escapeHtml(q.chapterName)}</span>`
+              : ''
+          }
+          <span class="inline-flex items-center justify-center min-w-[2.6rem] h-9 px-2.5 rounded-xl font-extrabold text-sm ${
+            q.answer !== null ? theme.solid : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+          }">ข้อ ${displayNum}</span>
+          ${
+            isRetake && q.prevAnswer
+              ? `<span class="text-[11px] font-semibold px-2 py-0.5 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-300 border border-rose-500/20">เดิมตอบ: ${escapeHtml(q.prevAnswer)}</span>`
+              : ''
+          }
+        `;
+        leftBox.appendChild(labelWrap);
+
+        const actions = document.createElement('div');
+        actions.className = 'flex items-center gap-1';
+
+        const flagBtn = document.createElement('button');
+        flagBtn.type = 'button';
+        flagBtn.title = q.flagged ? 'ยกเลิกปักธง' : 'ปักธงไว้ทวน';
+        flagBtn.className = `p-2 rounded-xl transition active:scale-90 ${
+          q.flagged
+            ? 'bg-amber-500/20 text-amber-600 dark:text-amber-300'
+            : 'text-slate-400 hover:text-amber-500 hover:bg-slate-100 dark:hover:bg-slate-800'
+        }`;
+        flagBtn.innerHTML = `
+          <svg class="w-4 h-4" fill="${q.flagged ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+          </svg>
+        `;
+        flagBtn.addEventListener('click', () => toggleFlag(idx));
+        actions.appendChild(flagBtn);
+
+        if (canRemove) {
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.title = 'ลบข้อนี้ออก';
+          delBtn.className = 'p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition active:scale-90';
+          delBtn.innerHTML = `
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          `;
+          delBtn.addEventListener('click', removeLastQuestion);
+          actions.appendChild(delBtn);
+        }
+
+        leftBox.appendChild(actions);
+
+        // Right: Choice Bubbles
+        const choicesWrap = document.createElement('div');
+        choicesWrap.className = 'flex items-center justify-between sm:justify-end gap-2';
+
+        choices.forEach((choice) => {
+          const isSelected = q.answer === choice;
+          const isEliminated = Array.isArray(q.eliminated) && q.eliminated.includes(choice);
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.title = 'คลิกเพื่อเลือก | คลิกขวาหรือกดค้างเพื่อตัดช้อยส์';
+
+          let style =
+            'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/85 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-white/10';
+          if (isSelected) {
+            style = `${theme.bubbleActive} scale-[1.03] border-transparent`;
+          } else if (isEliminated) {
+            style =
+              'bg-slate-100/60 dark:bg-slate-950/60 text-slate-400 dark:text-slate-600 border border-rose-400/25 opacity-60 line-through decoration-rose-500 decoration-2';
+          } else if (s.eliminateMode) {
+            style =
+              'bg-slate-100 dark:bg-slate-800/85 hover:bg-rose-500/15 hover:border-rose-400/50 text-slate-800 dark:text-slate-100 border border-dashed border-rose-400/40';
+          }
+
+          btn.className = `relative flex-1 sm:flex-none min-w-[3rem] sm:min-w-[3.25rem] ${bubbleHeight} px-3 rounded-2xl font-bold transition-all duration-150 active:scale-90 flex items-center justify-center select-none ${style}`;
+          btn.innerHTML = isEliminated
+            ? `<span>${escapeHtml(choice)}</span><span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] font-extrabold flex items-center justify-center">✕</span>`
+            : `<span>${escapeHtml(choice)}</span>`;
+
+          // Touch long-press to eliminate
+          let pressTimer = null;
+          let didLongPress = false;
+          btn.addEventListener(
+            'touchstart',
+            () => {
+              didLongPress = false;
+              pressTimer = setTimeout(() => {
+                didLongPress = true;
+                toggleEliminate(idx, choice);
+              }, 380);
+            },
+            { passive: true }
+          );
+          btn.addEventListener('touchend', () => clearTimeout(pressTimer));
+          btn.addEventListener('touchmove', () => clearTimeout(pressTimer));
+
+          // Desktop right-click to eliminate
+          btn.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            toggleEliminate(idx, choice);
+          });
+
+          btn.addEventListener('click', () => {
+            if (didLongPress) {
+              didLongPress = false;
+              return;
+            }
+            if (s.eliminateMode) toggleEliminate(idx, choice);
+            else toggleAnswer(idx, choice);
+          });
+
+          choicesWrap.appendChild(btn);
+        });
+
+        inner.appendChild(leftBox);
+        inner.appendChild(choicesWrap);
+        card.appendChild(inner);
+        return card;
+      }
+
+      function createGradeCard(idx) {
+        const s = ui.session;
+        const theme = getTheme();
+        const list = getSessionList();
+        const q = list[idx];
+        const isRetake = s.type !== 'chapter';
+        const displayNum = isRetake ? q.num : q.num || idx + 1;
+        const isCorrect = q.grade === 'correct';
+        const isWrong = q.grade === 'wrong';
+
+        let cardStyle = 'bg-white dark:bg-slate-900/65 border-slate-200/90 dark:border-white/10';
+        if (isCorrect) cardStyle = 'bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-500/45';
+        else if (isWrong) cardStyle = 'bg-rose-50/80 dark:bg-rose-950/30 border-rose-300 dark:border-rose-500/45';
+
+        const card = document.createElement('div');
+        card.id = `q-card-${idx}`;
+        card.className = `rounded-2xl p-4 sm:px-5 border transition-all duration-150 ${cardStyle}`;
+
+        const inner = document.createElement('div');
+        inner.className = 'flex items-center justify-between gap-3';
+
+        const numBadgeStyle = isCorrect
+          ? 'bg-emerald-500 text-white'
+          : isWrong
+          ? 'bg-rose-500 text-white'
+          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300';
+
+        const leftBox = document.createElement('div');
+        leftBox.className = 'flex items-center flex-wrap gap-2 min-w-0';
+        leftBox.innerHTML = `
+          ${
+            s.type === 'retake-subject'
+              ? `<span class="px-2 py-0.5 rounded-lg text-[11px] font-bold bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300">${escapeHtml(q.chapterName)}</span>`
+              : ''
+          }
+          <span class="shrink-0 inline-flex items-center justify-center min-w-[2.75rem] h-10 px-2.5 rounded-xl font-extrabold text-sm ${numBadgeStyle}">
+            ข้อ ${displayNum}
+          </span>
+          ${
+            q.answer !== null
+              ? `<span class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">ตอบ:</span>
+                 <span class="inline-flex items-center justify-center min-w-[2rem] h-8 px-2.5 rounded-xl border font-extrabold text-sm ${theme.badge}">${escapeHtml(q.answer)}</span>`
+              : `<span class="text-xs sm:text-sm text-slate-400 italic">ไม่ได้ตอบ</span>`
+          }
+        `;
+
+        const btns = document.createElement('div');
+        btns.className = 'flex items-center gap-2 shrink-0';
+
+        const btnOk = document.createElement('button');
+        btnOk.type = 'button';
+        btnOk.className = `min-w-[3.25rem] sm:min-w-[4.5rem] h-12 px-3 rounded-2xl font-bold text-base transition active:scale-90 flex items-center justify-center gap-1 ${
+          isCorrect
+            ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-300/60'
+            : 'bg-slate-100 hover:bg-emerald-500/15 dark:bg-slate-800 dark:hover:bg-emerald-500/20 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-300 border border-slate-200 dark:border-white/10'
+        }`;
+        btnOk.innerHTML = `<span>✓</span><span class="hidden sm:inline text-sm">ถูก</span>`;
+        btnOk.addEventListener('click', () => toggleGrade(idx, 'correct'));
+
+        const btnNo = document.createElement('button');
+        btnNo.type = 'button';
+        btnNo.className = `min-w-[3.25rem] sm:min-w-[4.5rem] h-12 px-3 rounded-2xl font-bold text-base transition active:scale-90 flex items-center justify-center gap-1 ${
+          isWrong
+            ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30 ring-2 ring-rose-300/60'
+            : 'bg-slate-100 hover:bg-rose-500/15 dark:bg-slate-800 dark:hover:bg-rose-500/20 text-slate-600 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-300 border border-slate-200 dark:border-white/10'
+        }`;
+        btnNo.innerHTML = `<span>✕</span><span class="hidden sm:inline text-sm">ผิด</span>`;
+        btnNo.addEventListener('click', () => toggleGrade(idx, 'wrong'));
+
+        btns.appendChild(btnOk);
+        btns.appendChild(btnNo);
+        inner.appendChild(leftBox);
+        inner.appendChild(btns);
+        card.appendChild(inner);
+        return card;
+      }
+
+      function renderQuestionList() {
+        const s = ui.session;
+        const list = getSessionList();
+        el.questionList.className = db.settings.twoColumns
+          ? 'grid grid-cols-1 lg:grid-cols-2 gap-3'
+          : 'grid grid-cols-1 gap-3';
+
+        el.questionList.innerHTML = '';
+        const frag = document.createDocumentFragment();
+        let shown = 0;
+
+        for (let i = 0; i < list.length; i++) {
+          const q = list[i];
+          if (s.mode === 'answer') {
+            if (s.answerFilter === 'unanswered' && q.answer !== null) continue;
+            if (s.answerFilter === 'flagged' && !q.flagged) continue;
+            frag.appendChild(createAnswerCard(i));
+            shown++;
+          } else {
+            if (s.gradeFilter === 'correct' && q.grade !== 'correct') continue;
+            if (s.gradeFilter === 'wrong' && q.grade !== 'wrong') continue;
+            frag.appendChild(createGradeCard(i));
+            shown++;
+          }
+        }
+
+        el.questionList.appendChild(frag);
+        if (shown === 0) {
+          el.emptyFilterState.classList.remove('hidden');
+          if (s.mode === 'answer') {
+            el.emptyFilterText.textContent =
+              s.answerFilter === 'unanswered' ? '🎉 ตอบครบทุกข้อแล้ว!' : 'ยังไม่มีข้อที่ปักธง 🚩';
+          } else {
+            el.emptyFilterText.textContent =
+              s.gradeFilter === 'correct' ? 'ยังไม่มีข้อที่ติ๊กถูก ✓' : 'ยังไม่มีข้อที่ติ๊กผิด ✕';
+          }
+        } else {
+          el.emptyFilterState.classList.add('hidden');
+        }
+      }
+
+      function renderWorkspaceView() {
+        const s = ui.session;
+        if (!s) {
+          ui.view = 'home';
+          renderCurrentView();
+          return;
+        }
+
+        const isNormalChapter = s.type === 'chapter';
+        if (s.mode === 'answer') {
+          el.wsAnswerTools.classList.remove('hidden');
+          el.gradeDashboard.classList.add('hidden');
+          el.bottomBarAnswer.classList.remove('hidden');
+          el.bottomBarGrade.classList.add('hidden');
+          el.stickyAddGroup.classList.toggle('hidden', !isNormalChapter);
+          el.inlineAddWrapper.classList.toggle('hidden', !isNormalChapter || s.answerFilter !== 'all');
+        } else {
+          el.wsAnswerTools.classList.add('hidden');
+          el.gradeDashboard.classList.remove('hidden');
+          el.bottomBarAnswer.classList.add('hidden');
+          el.bottomBarGrade.classList.remove('hidden');
+          el.inlineAddWrapper.classList.add('hidden');
+        }
+
+        updateWorkspaceHeader();
+        renderQuestionList();
+      }
+
+      // =====================================================================
+      // WORKSPACE INTERACTIONS (SYNCING RETAKE RESULTS BACK TO CHAPTERS!)
+      // =====================================================================
+      function touchChapterTimestamp(subjectId, chapterId) {
+        const sub = getSubject(subjectId);
+        if (sub) sub.updatedAt = Date.now();
+        const ch = getChapter(subjectId, chapterId);
+        if (ch) ch.updatedAt = Date.now();
+      }
+
+      function toggleAnswer(idx, choice) {
+        const s = ui.session;
+        const q = getSessionList()[idx];
+        if (!q) return;
+
+        if (q.answer === choice) {
+          q.answer = null;
+        } else {
+          q.answer = choice;
+          if (Array.isArray(q.eliminated)) {
+            q.eliminated = q.eliminated.filter((c) => c !== choice);
+          }
+        }
+
+        if (s.type === 'chapter') {
+          touchChapterTimestamp(s.subjectId, s.chapterId);
+          saveCache();
+        }
+
+        if (s.answerFilter === 'unanswered') renderQuestionList();
+        else {
+          const old = document.getElementById(`q-card-${idx}`);
+          if (old) old.replaceWith(createAnswerCard(idx));
+        }
+        updateWorkspaceHeader();
+      }
+
+      function toggleEliminate(idx, choice) {
+        const s = ui.session;
+        const q = getSessionList()[idx];
+        if (!q) return;
+        if (!Array.isArray(q.eliminated)) q.eliminated = [];
+
+        if (q.eliminated.includes(choice)) {
+          q.eliminated = q.eliminated.filter((c) => c !== choice);
+        } else {
+          q.eliminated.push(choice);
+          if (q.answer === choice) q.answer = null;
+        }
+
+        if (s.type === 'chapter') saveCache();
+        const old = document.getElementById(`q-card-${idx}`);
+        if (old) old.replaceWith(createAnswerCard(idx));
+        updateWorkspaceHeader();
+      }
+
+      function toggleFlag(idx) {
+        const s = ui.session;
+        const q = getSessionList()[idx];
+        if (!q) return;
+        q.flagged = !q.flagged;
+
+        if (s.type === 'chapter') saveCache();
+        if (s.answerFilter === 'flagged') renderQuestionList();
+        else {
+          const old = document.getElementById(`q-card-${idx}`);
+          if (old) old.replaceWith(createAnswerCard(idx));
+        }
+        updateWorkspaceHeader();
+      }
+
+      /**
+       * Mark a question Correct/Wrong.
+       * In Retake Mode, marking ✓ immediately updates the original chapter question to 'correct'
+       * (removing it from the subject/chapter wrong list!). Marking ✕ keeps it 'wrong'.
+       */
+      function toggleGrade(idx, mark) {
+        const s = ui.session;
+        const q = getSessionList()[idx];
+        if (!q) return;
+
+        q.grade = q.grade === mark ? null : mark;
+
+        if (s.type === 'chapter') {
+          touchChapterTimestamp(s.subjectId, s.chapterId);
+        } else {
+          // Sync retake grade back to the underlying chapter question in cache!
+          const origCh = getChapter(s.subjectId, q.chapterId);
+          if (origCh && origCh.questions[q.qIndex]) {
+            const origQ = origCh.questions[q.qIndex];
+            if (q.grade === 'correct') {
+              origQ.grade = 'correct';
+              if (q.answer !== null) origQ.answer = q.answer;
+            } else {
+              // Still wrong or ungraded -> stays 'wrong' in the mistake bank
+              origQ.grade = 'wrong';
+              if (q.answer !== null) origQ.answer = q.answer;
+            }
+            touchChapterTimestamp(s.subjectId, q.chapterId);
+          }
+        }
+
+        saveCache();
+
+        if (s.gradeFilter !== 'all') renderQuestionList();
+        else {
+          const old = document.getElementById(`q-card-${idx}`);
+          if (old) old.replaceWith(createGradeCard(idx));
+        }
+        updateWorkspaceHeader();
+      }
+
+      function addQuestions(amount = 1) {
+        const s = ui.session;
+        if (!s || s.type !== 'chapter') return;
+        const ch = getChapter(s.subjectId, s.chapterId);
+        if (!ch) return;
+
+        const prevLen = ch.questions.length;
+        for (let i = 0; i < amount; i++) {
+          ch.questions.push({
+            num: ch.questions.length + 1,
+            answer: null,
+            grade: null,
+            eliminated: [],
+            flagged: false,
+          });
+        }
+        s.answerFilter = 'all';
+        touchChapterTimestamp(s.subjectId, s.chapterId);
+        saveCache();
+        renderWorkspaceView();
+
+        const target = document.getElementById(`q-card-${prevLen}`);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showToast(amount === 1 ? `เพิ่มข้อที่ ${ch.questions.length} แล้ว` : `เพิ่ม ${amount} ข้อแล้ว`);
+      }
+
+      function removeLastQuestion() {
+        const s = ui.session;
+        if (!s || s.type !== 'chapter') return;
+        const ch = getChapter(s.subjectId, s.chapterId);
+        if (!ch || ch.questions.length <= 1) return;
+
+        const last = ch.questions[ch.questions.length - 1];
+        if (last.answer !== null || last.grade !== null) return;
+
+        ch.questions.pop();
+        touchChapterTimestamp(s.subjectId, s.chapterId);
+        saveCache();
+        renderWorkspaceView();
+      }
+
+      function copyScoreSummary() {
+        const s = ui.session;
+        const st = getSessionStats();
+        const list = getSessionList();
+        const wrongNums = list
+          .map((q, idx) => (q.grade === 'wrong' ? (s.type === 'retake-subject' ? `${q.chapterName} ข้อ ${q.num}` : `ข้อ ${q.num || idx + 1}`) : null))
+          .filter(Boolean);
+
+        let text = `📝 ${el.wsTitle.textContent}\n`;
+        text += `📊 คะแนน: ${st.correct} / ${st.total} (${st.percent.toFixed(1)}%)\n`;
+        text += `✅ ถูก: ${st.correct} | ❌ ผิด: ${st.wrong}`;
+        if (wrongNums.length > 0) text += `\n📌 ข้อที่ผิด: ${wrongNums.join(', ')}`;
+
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          showToast('คัดลอกสรุปคะแนนแล้ว!', 'success');
+        } catch {
+          showToast('ไม่สามารถคัดลอกได้', 'error');
+        }
+      }
+
+      // =====================================================================
+      // MAIN ROUTER
+      // =====================================================================
+      function renderCurrentView() {
+        el.viewHome.classList.toggle('hidden', ui.view !== 'home');
+        el.viewSubject.classList.toggle('hidden', ui.view !== 'subject');
+        el.viewWorkspace.classList.toggle('hidden', ui.view !== 'workspace');
+
+        if (ui.view === 'home') renderHomeView();
+        else if (ui.view === 'subject') renderSubjectView();
+        else if (ui.view === 'workspace') renderWorkspaceView();
+      }
+
+      // =====================================================================
+      // EVENT LISTENERS
+      // =====================================================================
+      el.presetBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          el.inputCount.value = btn.dataset.preset;
+          updatePresetPills(btn.dataset.preset);
+        });
+      });
+      el.inputCount.addEventListener('input', (e) => updatePresetPills(e.target.value));
+
+      // Create New Sheet Form Submit
+      el.createForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const subName = el.inputSubject.value.trim();
+        const chName = el.inputChapter.value.trim();
+        if (!subName || !chName) return;
+
+        let count = parseInt(el.inputCount.value, 10);
+        if (isNaN(count) || count < 1) count = 1;
+        if (count > 500) count = 500;
+
+        let choices = CHOICE_PRESETS[ui.selectedChoicePreset].choices;
+        if (ui.selectedChoicePreset === 'custom') {
+          const customRaw = el.inputCustomChoices.value
+            .trim()
+            .split(/[\s,]+/)
+            .filter(Boolean);
+          if (customRaw.length < 2) {
+            showToast('กรุณาใส่ตัวเลือกอย่างน้อย 2 ตัว (คั่นด้วยเว้นวรรค)', 'error');
+            return;
+          }
+          choices = customRaw.slice(0, 8);
+        }
+
+        // Find existing subject by name (case-insensitive) or create new
+        let subject = db.subjects.find((s) => s.name.trim().toLowerCase() === subName.toLowerCase());
+        if (!subject) {
+          subject = {
+            id: uid('sub'),
+            name: subName,
+            updatedAt: Date.now(),
+            chapters: [],
+          };
+          db.subjects.unshift(subject);
+        }
+
+        const newChapter = {
+          id: uid('ch'),
+          name: chName,
+          choices: [...choices],
+          updatedAt: Date.now(),
+          questions: Array.from({ length: count }, (_, i) => ({
+            num: i + 1,
+            answer: null,
+            grade: null,
+            eliminated: [],
+            flagged: false,
+          })),
+        };
+
+        subject.chapters.push(newChapter);
+        subject.updatedAt = Date.now();
+        saveCache();
+
+        el.inputChapter.value = '';
+        startChapterSession(subject.id, newChapter.id, 'answer');
+      });
+
+      // Subject View Navigation
+      el.btnSubjectBack.addEventListener('click', () => {
+        ui.view = 'home';
+        renderCurrentView();
+      });
+
+      el.btnAddChapterInSubject.addEventListener('click', () => {
+        const sub = getSubject(ui.selectedSubjectId);
+        ui.view = 'home';
+        renderCurrentView();
+        if (sub) {
+          el.inputSubject.value = sub.name;
+          el.inputChapter.focus();
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      el.btnRetakeSubject.addEventListener('click', () => {
+        if (ui.selectedSubjectId) startRetakeSubjectSession(ui.selectedSubjectId);
+      });
+
+      el.btnSubjectDelete.addEventListener('click', () => {
+        const sub = getSubject(ui.selectedSubjectId);
+        if (!sub) return;
+        openConfirm('ลบวิชานี้ทั้งหมด?', `บทเรียนและข้อมูลทั้งหมดในวิชา "${sub.name}" จะถูกลบออกจากแคช`, 'ลบวิชา', () => {
+          db.subjects = db.subjects.filter((s) => s.id !== sub.id);
+          saveCache();
+          ui.selectedSubjectId = null;
+          ui.view = 'home';
+          renderCurrentView();
+          showToast(`ลบวิชา "${sub.name}" แล้ว`);
+        });
+      });
+
+      // Workspace Navigation & Actions
+      const exitWorkspaceToSubject = () => {
+        if (ui.session && ui.session.subjectId) {
+          openSubjectView(ui.session.subjectId);
+        } else {
+          ui.view = 'home';
+          renderCurrentView();
+        }
+      };
+
+      el.btnWsBack.addEventListener('click', exitWorkspaceToSubject);
+      el.btnGradeDone.addEventListener('click', exitWorkspaceToSubject);
+
+      el.btnInlineAdd1.addEventListener('click', () => addQuestions(1));
+      el.btnInlineAdd5.addEventListener('click', () => addQuestions(5));
+      el.btnStickyAdd1.addEventListener('click', () => addQuestions(1));
+      el.btnStickyAdd5.addEventListener('click', () => addQuestions(5));
+
+      el.btnGoGrade.addEventListener('click', () => {
+        if (!ui.session) return;
+        ui.session.mode = 'grade';
+        ui.session.eliminateMode = false;
+        ui.session.gradeFilter = 'all';
+        renderWorkspaceView();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      el.btnBackAnswer.addEventListener('click', () => {
+        if (!ui.session) return;
+        ui.session.mode = 'answer';
+        renderWorkspaceView();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Instant Retake Wrong Loop from Grade Dashboard
+      el.btnGradeRetakeWrong.addEventListener('click', () => {
+        const s = ui.session;
+        if (!s) return;
+        if (s.type === 'retake-subject') {
+          startRetakeSubjectSession(s.subjectId);
+        } else {
+          startRetakeChapterSession(s.subjectId, s.chapterId);
+        }
+      });
+
+      el.btnToggleEliminate.addEventListener('click', () => {
+        if (!ui.session) return;
+        ui.session.eliminateMode = !ui.session.eliminateMode;
+        updateWorkspaceHeader();
+        renderQuestionList();
+      });
+
+      el.ansFilterTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          if (!ui.session) return;
+          ui.session.answerFilter = tab.dataset.ansFilter;
+          renderWorkspaceView();
+        });
+      });
+
+      el.filterTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          if (!ui.session) return;
+          ui.session.gradeFilter = tab.dataset.filter;
+          renderWorkspaceView();
+        });
+      });
+
+      el.btnCopySummary.addEventListener('click', copyScoreSummary);
+
+      // Customize Modal Listeners
+      const openCustomize = () => {
+        renderCustomizeModal();
+        el.customizeModal.classList.remove('hidden');
+      };
+      el.btnOpenCustomizeHome.addEventListener('click', openCustomize);
+      el.btnWsCustomize.addEventListener('click', openCustomize);
+      el.btnCloseCustomize.addEventListener('click', () => el.customizeModal.classList.add('hidden'));
+      el.customizeModal.addEventListener('click', (e) => {
+        if (e.target === el.customizeModal) el.customizeModal.classList.add('hidden');
+      });
+
+      el.btnModeDark.addEventListener('click', () => {
+        db.settings.darkMode = true;
+        saveCache();
+        applyAppearance();
+        renderCustomizeModal();
+      });
+      el.btnModeLight.addEventListener('click', () => {
+        db.settings.darkMode = false;
+        saveCache();
+        applyAppearance();
+        renderCustomizeModal();
+      });
+      el.btnSizeMd.addEventListener('click', () => {
+        db.settings.bubbleSize = 'md';
+        saveCache();
+        renderCustomizeModal();
+        if (ui.view === 'workspace') renderQuestionList();
+      });
+      el.btnSizeLg.addEventListener('click', () => {
+        db.settings.bubbleSize = 'lg';
+        saveCache();
+        renderCustomizeModal();
+        if (ui.view === 'workspace') renderQuestionList();
+      });
+      el.btnCols1.addEventListener('click', () => {
+        db.settings.twoColumns = false;
+        saveCache();
+        renderCustomizeModal();
+        if (ui.view === 'workspace') renderQuestionList();
+      });
+      el.btnCols2.addEventListener('click', () => {
+        db.settings.twoColumns = true;
+        saveCache();
+        renderCustomizeModal();
+        if (ui.view === 'workspace') renderQuestionList();
+      });
+
+      // Export & Import Cache JSON
+      el.btnExportCache.addEventListener('click', () => {
+        try {
+          const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `answer_sheet_backup_${new Date().toISOString().slice(0, 10)}.json`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          showToast('สำรองข้อมูลแคชเรียบร้อยแล้ว', 'success');
+        } catch {
+          showToast('ไม่สามารถส่งออกไฟล์ได้', 'error');
+        }
+      });
+
+      el.btnImportCache.addEventListener('click', () => el.inputImportFile.click());
+      el.inputImportFile.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const parsed = JSON.parse(String(ev.target.result || ''));
+            if (!parsed || !Array.isArray(parsed.subjects)) throw new Error('Invalid file');
+            const existingIds = new Set(db.subjects.map((s) => s.id));
+            let added = 0;
+            parsed.subjects.forEach((s) => {
+              if (s && s.id && !existingIds.has(s.id)) {
+                db.subjects.push(s);
+                added++;
+              }
+            });
+            saveCache();
+            renderCustomizeModal();
+            renderCurrentView();
+            showToast(`นำเข้าข้อมูลสำเร็จ (+${added} วิชา)`, 'success');
+          } catch {
+            showToast('ไฟล์สำรองไม่ถูกต้อง', 'error');
+          }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+      });
+
+      // Confirm Modal Listeners
+      el.btnConfirmCancel.addEventListener('click', closeConfirm);
+      el.btnConfirmOk.addEventListener('click', () => {
+        const fn = pendingConfirmAction;
+        closeConfirm();
+        if (typeof fn === 'function') fn();
+      });
+      el.confirmModal.addEventListener('click', (e) => {
+        if (e.target === el.confirmModal) closeConfirm();
+      });
+
+      // =====================================================================
+      // INITIALIZE
+      // =====================================================================
+      loadCache();
+      applyAppearance();
+      renderCurrentView();
+    })();
+  </script>
+</body>
+</html>
